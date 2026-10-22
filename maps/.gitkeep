@@ -1,9 +1,5 @@
-# Placeholder file for maps directory
+# Placeholder file for EVA maps directory
 # Add map images here with the following names:
-# - de_mirage.jpg
-# - de_inferno.jpg
-# - de_dust2.jpg
-# - de_nuke.jpg
-# - de_ancient.jpg
-# - de_vertigo.jpg
-# - de_overpass.jpg
+# - eva_arena.png
+# - eva_forest.png
+# - eva_urban.png
