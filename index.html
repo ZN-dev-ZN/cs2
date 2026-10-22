@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS2 Strategy Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <h1>CS2 Strategy Tool</h1>
+            <p class="subtitle">Créez et partagez vos stratégies pour Counter-Strike 2</p>
+        </header>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="tool-group">
+                <button id="select-tool" class="tool-button active" title="Sélectionner">
+                    <span class="icon">🖱️</span>
+                </button>
+                <button id="player-tool" class="tool-button" title="Ajouter un joueur">
+                    <span class="icon">👤</span>
+                </button>
+                <button id="smoke-tool" class="tool-button" title="Fumigène">
+                    <span class="icon">💨</span>
+                </button>
+                <button id="flash-tool" class="tool-button" title="Flash">
+                    <span class="icon">⚡</span>
+                </button>
+                <button id="he-tool" class="tool-button" title="HE Grenade">
+                    <span class="icon">💣</span>
+                </button>
+                <button id="molotov-tool" class="tool-button" title="Molotov">
+                    <span class="icon">🔥</span>
+                </button>
+                <button id="decoy-tool" class="tool-button" title="Leurre">
+                    <span class="icon">🎯</span>
+                </button>
+            </div>
+            
+            <div class="tool-group">
+                <button id="clear-all" class="tool-button" title="Tout effacer">
+                    <span class="icon">🗑️</span>
+                </button>
+                <button id="undo-btn" class="tool-button" title="Annuler">
+                    <span class="icon">↩️</span>
+                </button>
+                <button id="redo-btn" class="tool-button" title="Rétablir">
+                    <span class="icon">↪️</span>
+                </button>
+            </div>
+
+            <div class="tool-group">
+                <select id="map-select" class="map-select">
+                    <option value="de_mirage">Mirage</option>
+                    <option value="de_inferno">Inferno</option>
+                    <option value="de_dust2">Dust 2</option>
+                    <option value="de_nuke">Nuke</option>
+                    <option value="de_ancient">Ancient</option>
+                    <option value="de_vertigo">Vertigo</option>
+                    <option value="de_overpass">Overpass</option>
+                </select>
+            </div>
+
+            <div class="tool-group">
+                <button id="save-strategy" class="tool-button" title="Sauvegarder">
+                    <span class="icon">💾</span>
+                </button>
+                <button id="load-strategy" class="tool-button" title="Charger">
+                    <span class="icon">📂</span>
+                </button>
+                <button id="export-png" class="tool-button" title="Exporter en PNG">
+                    <span class="icon">📸</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Canvas Area -->
+        <div class="canvas-container">
+            <div id="map-canvas" class="map-canvas">
+                <!-- Map image will be loaded here -->
+                <img id="map-image" src="maps/de_mirage.jpg" alt="Carte CS2" class="map-image">
+                
+                <!-- Strategy elements will be added here -->
+                <div id="strategy-elements" class="strategy-elements"></div>
+            </div>
+
+            <!-- Timeline -->
+            <div class="timeline-container">
+                <h3>Timeline</h3>
+                <div id="timeline" class="timeline">
+                    <div class="timeline-header">
+                        <span>Temps</span>
+                        <span>Action</span>
+                    </div>
+                    <div id="timeline-items" class="timeline-items"></div>
+                </div>
+                <div class="timeline-controls">
+                    <button id="add-timeline-item">+ Ajouter</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Side Panel -->
+        <aside class="side-panel">
+            <div class="panel-section">
+                <h3>Propriétés</h3>
+                <div id="properties-panel" class="properties-panel">
+                    <p class="no-selection">Aucun élément sélectionné</p>
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <h3>Équipes</h3>
+                <div class="team-selector">
+                    <div class="team-option">
+                        <label>
+                            <input type="radio" name="team" value="T" checked>
+                            <span class="team-color t-color"></span>
+                            <span>Terroristes</span>
+                        </label>
+                    </div>
+                    <div class="team-option">
+                        <label>
+                            <input type="radio" name="team" value="CT">
+                            <span class="team-color ct-color"></span>
+                            <span>Contre-Terroristes</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <h3>Notes</h3>
+                <textarea id="strategy-notes" placeholder="Ajoutez des notes pour cette stratégie..."></textarea>
+            </div>
+        </aside>
+
+        <!-- Strategy List -->
+        <div class="strategy-list-container">
+            <h3>Mes Stratégies</h3>
+            <div id="strategy-list" class="strategy-list">
+                <div class="strategy-item new-strategy">
+                    <span class="icon">+</span>
+                    <span>Nouvelle Stratégie</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for saving strategy -->
+        <div id="save-modal" class="modal">
+            <div class="modal-content">
+                <h2>Sauvegarder la Stratégie</h2>
+                <form id="save-form">
+                    <div class="form-group">
+                        <label for="strategy-name">Nom de la stratégie</label>
+                        <input type="text" id="strategy-name" placeholder="Ex: Rush B Inferno" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="strategy-type">Type</label>
+                        <select id="strategy-type">
+                            <option value="attack">Attaque</option>
+                            <option value="defense">Défense</option>
+                            <option value="retake">Retake</option>
+                            <option value="execute">Execute</option>
+                        </select>
+                    </div>
+                    <div class="modal-buttons">
+                        <button type="button" id="cancel-save" class="btn-secondary">Annuler</button>
+                        <button type="submit" class="btn-primary">Sauvegarder</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal for timeline item -->
+        <div id="timeline-modal" class="modal">
+            <div class="modal-content">
+                <h2>Ajouter une Action</h2>
+                <form id="timeline-form">
+                    <div class="form-group">
+                        <label for="action-time">Temps (secondes)</label>
+                        <input type="number" id="action-time" value="0" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="action-type">Type d'action</label>
+                        <select id="action-type">
+                            <option value="move">Déplacement</option>
+                            <option value="smoke">Fumigène</option>
+                            <option value="flash">Flash</option>
+                            <option value="he">HE Grenade</option>
+                            <option value="molotov">Molotov</option>
+                            <option value="decoy">Leurre</option>
+                            <option value="plant">Pose de la bombe</option>
+                            <option value="defuse">Désamorçage</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="action-description">Description</label>
+                        <textarea id="action-description" placeholder="Ex: Fumigène middle"></textarea>
+                    </div>
+                    <div class="modal-buttons">
+                        <button type="button" id="cancel-timeline" class="btn-secondary">Annuler</button>
+                        <button type="submit" class="btn-primary">Ajouter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Toast notifications -->
+        <div id="toast-container" class="toast-container"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

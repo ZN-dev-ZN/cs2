@@ -1,0 +1,837 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #ff4757;
+    --secondary-color: #2ed573;
+    --accent-color: #ffa502;
+    --background-color: #1a1a2e;
+    --surface-color: #16213e;
+    --surface-light: #0f3460;
+    --text-primary: #ffffff;
+    --text-secondary: #b8b8b8;
+    --text-muted: #6c757d;
+    --border-color: #2d3748;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    
+    /* Team colors */
+    --t-color: #ff4757;
+    --ct-color: #2ed573;
+    
+    /* Tool colors */
+    --player-color: #3742fa;
+    --smoke-color: #6c757d;
+    --flash-color: #ffd93d;
+    --he-color: #ff4757;
+    --molotov-color: #ff6b35;
+    --decoy-color: #a55eea;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* App Container */
+.app-container {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-areas: 
+        "header header"
+        "toolbar toolbar"
+        "canvas side"
+        "strategies strategies";
+    gap: 10px;
+    padding: 10px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* Header */
+.header {
+    grid-area: header;
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--surface-light), var(--surface-color));
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    text-shadow: 2px 2px 4px var(--shadow-color);
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+/* Toolbar */
+.toolbar {
+    grid-area: toolbar;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+    background-color: var(--surface-color);
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+}
+
+.tool-group {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    padding: 5px;
+    background-color: var(--surface-light);
+    border-radius: 8px;
+}
+
+.tool-button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--surface-color);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-size: 1.2rem;
+}
+
+.tool-button:hover {
+    background-color: var(--surface-light);
+    transform: scale(1.1);
+}
+
+.tool-button.active {
+    background-color: var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-color);
+}
+
+.tool-button .icon {
+    pointer-events: none;
+}
+
+.map-select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--surface-color);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    outline: none;
+}
+
+.map-select:focus {
+    border-color: var(--primary-color);
+}
+
+/* Canvas Container */
+.canvas-container {
+    grid-area: canvas;
+    display: grid;
+    grid-template-columns: 1fr 250px;
+    gap: 10px;
+}
+
+.map-canvas {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    background-color: var(--surface-light);
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    cursor: crosshair;
+}
+
+.map-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background-color: #000;
+    opacity: 0.8;
+}
+
+.strategy-elements {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* Strategy Elements */
+.strategy-element {
+    position: absolute;
+    pointer-events: auto;
+    cursor: move;
+    user-select: none;
+    transition: transform 0.1s ease;
+    z-index: 1;
+}
+
+.strategy-element:hover {
+    transform: scale(1.2);
+    z-index: 10;
+}
+
+.strategy-element.selected {
+    box-shadow: 0 0 15px var(--primary-color);
+    transform: scale(1.2);
+    z-index: 10;
+}
+
+/* Player Element */
+.player-element {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--player-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.8rem;
+    border: 2px solid white;
+}
+
+.player-element.t-team {
+    background-color: var(--t-color);
+    border-color: #ffcccc;
+}
+
+.player-element.ct-team {
+    background-color: var(--ct-color);
+    border-color: #ccffcc;
+}
+
+/* Smoke Element */
+.smoke-element {
+    width: 40px;
+    height: 40px;
+    background-color: var(--smoke-color);
+    border-radius: 50%;
+    opacity: 0.7;
+    border: 2px solid white;
+}
+
+.smoke-element::before {
+    content: "💨";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+}
+
+/* Flash Element */
+.flash-element {
+    width: 35px;
+    height: 35px;
+    background-color: var(--flash-color);
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    border: 2px solid white;
+}
+
+.flash-element::before {
+    content: "⚡";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+}
+
+/* HE Element */
+.he-element {
+    width: 30px;
+    height: 30px;
+    background-color: var(--he-color);
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.he-element::before {
+    content: "💣";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1rem;
+}
+
+/* Molotov Element */
+.molotov-element {
+    width: 35px;
+    height: 35px;
+    background-color: var(--molotov-color);
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.molotov-element::before {
+    content: "🔥";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+}
+
+/* Decoy Element */
+.decoy-element {
+    width: 30px;
+    height: 30px;
+    background-color: var(--decoy-color);
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.decoy-element::before {
+    content: "🎯";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1rem;
+}
+
+/* Timeline */
+.timeline-container {
+    background-color: var(--surface-color);
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    padding: 15px;
+}
+
+.timeline-container h3 {
+    margin-bottom: 10px;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+.timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.timeline-header {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    padding: 8px;
+    background-color: var(--surface-light);
+    border-radius: 5px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.timeline-items {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.timeline-item {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    padding: 8px;
+    background-color: var(--surface-light);
+    border-radius: 5px;
+    margin-bottom: 5px;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.timeline-item:hover {
+    background-color: rgba(255, 71, 87, 0.1);
+}
+
+.timeline-item .time {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.timeline-item .action {
+    font-size: 0.9rem;
+}
+
+.timeline-item .delete {
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.timeline-item .delete:hover {
+    color: var(--primary-color);
+}
+
+.timeline-controls {
+    margin-top: 10px;
+}
+
+.timeline-controls button {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.timeline-controls button:hover {
+    background-color: #ff6b7a;
+}
+
+/* Side Panel */
+.side-panel {
+    grid-area: side;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+    background-color: var(--surface-color);
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+}
+
+.panel-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.panel-section h3 {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 5px;
+}
+
+.properties-panel {
+    min-height: 100px;
+    padding: 10px;
+    background-color: var(--surface-light);
+    border-radius: 5px;
+}
+
+.no-selection {
+    color: var(--text-muted);
+    text-align: center;
+    font-style: italic;
+}
+
+.property-row {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.property-row label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.property-row input,
+.property-row select {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    background-color: var(--surface-color);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+/* Team Selector */
+.team-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.team-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.team-option label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.team-option input[type="radio"] {
+    accent-color: var(--primary-color);
+}
+
+.team-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.t-color {
+    background-color: var(--t-color);
+}
+
+.ct-color {
+    background-color: var(--ct-color);
+}
+
+/* Notes */
+#strategy-notes {
+    min-height: 100px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    background-color: var(--surface-light);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+}
+
+#strategy-notes:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* Strategy List */
+.strategy-list-container {
+    grid-area: strategies;
+    background-color: var(--surface-color);
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    padding: 15px;
+}
+
+.strategy-list-container h3 {
+    margin-bottom: 10px;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+.strategy-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.strategy-item {
+    padding: 10px;
+    background-color: var(--surface-light);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.strategy-item:hover {
+    background-color: rgba(255, 71, 87, 0.1);
+    transform: translateY(-2px);
+}
+
+.strategy-item.new-strategy {
+    color: var(--text-muted);
+}
+
+.strategy-item .icon {
+    font-size: 1.5rem;
+}
+
+.strategy-item .name {
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.strategy-item .meta {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+/* Modals */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background-color: var(--surface-color);
+    border-radius: 10px;
+    padding: 25px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    background-color: var(--surface-light);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.form-group textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.btn-primary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #ff6b7a;
+}
+
+.btn-secondary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--surface-light);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: var(--border-color);
+}
+
+/* Toast Notifications */
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    padding: 12px 20px;
+    background-color: var(--surface-color);
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    box-shadow: 0 4px 12px var(--shadow-color);
+    animation: slideIn 0.3s ease-out;
+}
+
+.toast.success {
+    border-left: 4px solid var(--secondary-color);
+}
+
+.toast.error {
+    border-left: 4px solid var(--primary-color);
+}
+
+.toast.info {
+    border-left: 4px solid var(--accent-color);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .app-container {
+        grid-template-columns: 1fr;
+        grid-template-areas: 
+            "header"
+            "toolbar"
+            "canvas"
+            "side"
+            "strategies";
+    }
+
+    .canvas-container {
+        grid-template-columns: 1fr;
+    }
+
+    .timeline-container {
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 1.8rem;
+    }
+
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .tool-group {
+        flex-direction: column;
+    }
+
+    .map-canvas {
+        height: 400px;
+    }
+
+    .side-panel {
+        order: -1;
+    }
+
+    .strategy-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--surface-light);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}
+
+/* Drag and Drop Feedback */
+.drag-line {
+    position: absolute;
+    background-color: var(--primary-color);
+    height: 2px;
+    z-index: 100;
+    pointer-events: none;
+}
+
+/* Context Menu */
+.context-menu {
+    position: absolute;
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 5px;
+    z-index: 1000;
+    display: none;
+}
+
+.context-menu.active {
+    display: block;
+}
+
+.context-menu-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    color: var(--text-primary);
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+}
+
+.context-menu-item:hover {
+    background-color: var(--surface-light);
+}
+
+.context-menu-item.danger:hover {
+    background-color: rgba(255, 71, 87, 0.2);
+}
